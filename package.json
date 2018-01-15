@@ -1,0 +1,17 @@
+{
+  "name": "eslint-import-resolver-custom-alias",
+  "version": "1.0.0",
+  "description": "Plugin for eslint-plugin-import to use custom alias.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "LaySent",
+  "license": "MIT",
+  "dependencies": {
+    "resolve": "^1.5.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.8.0"
+  }
+}
