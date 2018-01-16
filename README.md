@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/laysent/eslint-import-resolver-custom-alias.svg?branch=master)](https://travis-ci.org/laysent/eslint-import-resolver-custom-alias)
+
 This plugin will help you configure [eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import)
 to allow customized alias and extensions.
 
