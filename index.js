@@ -2,16 +2,14 @@ const path = require('path');
 const resolve = require('resolve'); // eslint-disable-line
 
 function getOptions(file, config) {
-  return Object.assign(
-    {
+  return {
       extensions: config.extensions || ['.js'],
       basedir: path.dirname(path.resolve(file)),
       packageFilter(pkg) {
         pkg.main = pkg['jsnext:main'] || pkg.main; // eslint-disable-line
         return pkg;
       },
-    },
-  );
+    };
 }
 
 exports.interfaceVersion = 2;
