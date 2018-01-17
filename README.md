@@ -3,6 +3,20 @@
 This plugin will help you configure [eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import)
 to allow customized alias and extensions.
 
+## Installation
+
+To install this plugin, run:
+
+```bash
+npm install --dev eslint-import-resolver-custom-alias
+```
+
+or
+
+```bash
+yarn add --dev eslint-import-resolver-custom-alias
+```
+
 ## Configuration
 
 ```json
