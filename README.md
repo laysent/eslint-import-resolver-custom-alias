@@ -23,7 +23,7 @@ yarn add --dev eslint-import-resolver-custom-alias
 {
   "settings": {
     "import/resolver": {
-      "eslint-import-resolver-general-alias": {
+      "eslint-import-resolver-custom-alias": {
         "alias": {
           "src": "./src"
         },
