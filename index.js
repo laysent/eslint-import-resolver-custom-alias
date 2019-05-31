@@ -21,6 +21,8 @@ exports.resolve = (source, file, config) => {
       if (currentSource.indexOf(prefix) === 0 && currentSource[prefix.length] === '/') {
         const prefixPath = path.resolve(process.cwd(), config.alias[prefix]);
         ret = `${prefixPath}/${currentSource.substr(prefix.length)}`;
+      } else if (currentSource === prefix) {
+        ret = path.resolve(process.cwd(), config.alias[prefix]);
       }
       return ret;
     }, source);

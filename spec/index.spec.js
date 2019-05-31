@@ -48,6 +48,14 @@ describe('resolver plugin', () => {
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(source);
   });
+  it('should use alias when equals to it', () => {
+    const source = '@';
+    plugin.resolve(source, defaultFile, defaultConfig);
+    const modifiedSource = path.resolve(process.cwd(), './src');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
   it('should be fine when alias is not configured', () => {
     plugin.resolve(defaultSource, defaultFile, { });
 
