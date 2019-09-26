@@ -11,10 +11,14 @@ describe('resolver plugin', () => {
     extensions: ['.js', '.jsx'],
   };
   let resolve;
+  let fs;
   beforeAll(() => {
     resolve = require('resolve');
+    fs = require('fs');
     spyOn(resolve, 'sync');
     spyOn(resolve, 'isCore');
+    spyOn(fs, 'statSync');
+    spyOn(fs, 'readdirSync');
   });
   const plugin = require('../index');
   it('should define interfaceVersion as 2', () => {
@@ -26,7 +30,7 @@ describe('resolver plugin', () => {
   });
   it('should use config to resolve file', () => {
     plugin.resolve(defaultSource, defaultFile, defaultConfig);
-    const modifiedSource = `${path.resolve(process.cwd(), './src')}/${defaultSource.substr(1)}`;
+    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substr(1)}`;
 
     const mostRecent = resolve.sync.calls.mostRecent();
 
@@ -36,7 +40,7 @@ describe('resolver plugin', () => {
   });
   it('should replace alias', () => {
     plugin.resolve(defaultSource, defaultFile, defaultConfig);
-    const modifiedSource = `${path.resolve(process.cwd(), './src')}/${defaultSource.substr(1)}`;
+    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substr(1)}`;
 
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(modifiedSource);
@@ -114,5 +118,22 @@ describe('resolver plugin', () => {
     const result = plugin.resolve(defaultSource, defaultFile, defaultConfig);
 
     expect(result).toEqual({ found: false });
+  });
+  it('should resolve relative path based on package root', () => {
+    fs.statSync.and.returnValue({
+      isFile() { return false; }
+    });
+    fs.readdirSync.and.returnValue(['subfolder']);
+    const config = Object.assign({}, defaultConfig, {
+      packages: [
+        'packages/*'
+      ],
+    });
+    const fileInPackage = path.resolve(process.cwd(), 'packages', 'subfolder', defaultFile);
+    plugin.resolve(defaultSource, fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), 'packages', 'subfolder', './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
   });
 });

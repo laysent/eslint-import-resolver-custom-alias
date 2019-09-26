@@ -27,7 +27,10 @@ yarn add --dev eslint-import-resolver-custom-alias
         "alias": {
           "src": "./src"
         },
-        "extensions": [".js", ".jsx"]
+        "extensions": [".js", ".jsx"],
+        "packages": [
+          "packages/*"
+        ]
       }
     }
   }
@@ -39,3 +42,53 @@ it's actual path. Relative path is allowed for `value`. When used, it's relative
 root, where command line is running. (i.e. root path will be `process.cwd()`)
 
 `extensions` is an array of possible suffix. If not provided, default value will be `[".js"]`.
+
+`packages` is an optional configuration. When using lerna to manage packages and use eslint at
+root folder, `packages` lets the resolver know where each package folder exist. This way, when
+resolving alias, relative path will be resolved based on current package, instead of root folder.
+
+Consider the file as an example:
+
+```jsx
+import * as utils from '@/utils';
+```
+
+Suppose the above file locates at `./packages/subfolder/src/components/button.jsx` and command is
+running at root folder (i.e. `./`). If the resolver is configured the following way:
+
+```json
+{
+  "settings": {
+    "import/resolver": {
+      "eslint-import-resolver-custom-alias": {
+        "alias": {
+          "@": "./src"
+        },
+        "extensions": [".js", ".jsx"],
+      }
+    }
+  }
+}
+```
+
+Resolver will tries to find file at `./src/utils` folder. However, with `packages` configured:
+
+```json
+{
+  "settings": {
+    "import/resolver": {
+      "eslint-import-resolver-custom-alias": {
+        "alias": {
+          "@": "./src"
+        },
+        "extensions": [".js", ".jsx"],
+        "packages": [
+          "packages/*"
+        ]
+      }
+    }
+  }
+}
+```
+
+Resolver will try to find it at `./packages/subfolder/src/utils` folder instead.
