@@ -1,0 +1,12 @@
+{
+  "name": "repo1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "LaySent",
+  "license": "MIT",
+  "scripts": {
+    "eslint": "eslint ./src/index.js"
+  }
+}

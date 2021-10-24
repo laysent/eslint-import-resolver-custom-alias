@@ -1,0 +1,21 @@
+{
+  "name": "empty-string",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./packages/**/*.js"
+  },
+  "keywords": [],
+  "author": "LaySent",
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^8.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-import-resolver-custom-alias": "file:../.."
+  }
+}
