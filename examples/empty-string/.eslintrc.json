@@ -1,0 +1,30 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 13,
+        "sourceType": "module"
+    },
+    "rules": {
+        "import/no-unresolved": [2, { }]
+    },
+    "plugins": [
+        "import"
+    ],
+    "settings": {
+        "import/resolver": {
+            "eslint-import-resolver-custom-alias": {
+                "alias": {
+                    "": "./src"
+                },
+                "extensions": [".js", ".jsx"],
+                "packages": [
+                    "packages/*"
+                ]
+            }
+        }
+    }
+}
