@@ -121,7 +121,8 @@ describe('resolver plugin', () => {
   });
   it('should resolve relative path based on package root', () => {
     fs.statSync.and.returnValue({
-      isFile() { return false; }
+      isFile() { return false; },
+      isDirectory() { return true; }
     });
     fs.readdirSync.and.returnValue(['subfolder']);
     const config = Object.assign({}, defaultConfig, {
@@ -132,6 +133,20 @@ describe('resolver plugin', () => {
     const fileInPackage = path.resolve(process.cwd(), 'packages', 'subfolder', defaultFile);
     plugin.resolve(defaultSource, fileInPackage, config);
     const modifiedSource = path.resolve(process.cwd(), 'packages', 'subfolder', './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
+  it('should not throw error if packages not found', () => {
+    fs.statSync.and.throwError('no such file or dictionary');
+    const config = Object.assign({}, defaultConfig, {
+      packages: [
+        'packages/*'
+      ],
+    });
+    const fileInPackage = path.resolve(process.cwd(), defaultFile);
+    plugin.resolve(defaultSource, fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), './src', 'path/to/file');
 
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(modifiedSource);

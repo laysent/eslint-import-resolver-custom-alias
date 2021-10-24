@@ -27,6 +27,11 @@ exports.resolve = (source, file, config) => {
   const packages = (config.packages || [])
     .map(pkg => {
       const parent = path.resolve(process.cwd(), globParent(pkg));
+      try {
+        if (!fs.statSync(parent).isDirectory()) return [];
+      } catch (e) {
+        return [];
+      }
       const dir = fs.readdirSync(parent)
         .map(name => path.resolve(parent, name))
         .filter(name => !fs.statSync(name).isFile());
