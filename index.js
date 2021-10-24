@@ -41,10 +41,15 @@ exports.resolve = (source, file, config) => {
   try {
     const modifiedSource = Object.keys(config.alias || {}).reduce((currentSource, prefix) => {
       let ret = currentSource;
-      if (currentSource.indexOf(prefix) === 0 && currentSource[prefix.length] === '/') {
+      // case alias(prefix) = '', currentSource = 'utils/helper.js'
+      const isMatchEmptyString = prefix === '' && ['.', '/'].indexOf(currentSource[0]) < 0;
+      // case: alias(prefix) = 'src', currentSource = 'src/utils/helper.js'
+      const isMatchPrefix = currentSource.indexOf(prefix) === 0 && currentSource[prefix.length] === '/';
+      if (isMatchPrefix || isMatchEmptyString) {
         const prefixPath = getPath(config.alias[prefix], file, packages);
-        ret = `${prefixPath}${currentSource.substr(prefix.length)}`;
+        ret = path.join(prefixPath, currentSource.substr(prefix.length));
       } else if (currentSource === prefix) {
+        // case: alias(prefix) = 'src', currentSource = 'src'
         ret = getPath(config.alias[prefix], file, packages);
       }
       return ret;

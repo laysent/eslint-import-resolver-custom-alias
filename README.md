@@ -92,3 +92,30 @@ Resolver will tries to find file at `./src/utils` folder. However, with `package
 ```
 
 Resolver will try to find it at `./packages/subfolder/src/utils` folder instead.
+
+One special alias is empty string `""`. If configured, the resolver will try to
+add prefix in front of the path before resolving. For example, with following configuration
+
+```json
+{
+  "settings": {
+    "import/resolver": {
+      "eslint-import-resolver-custom-alias": {
+        "alias": {
+          "": "./src"
+        },
+        "extensions": [".js", ".jsx"],
+        "packages": [
+          "packages/*"
+        ]
+      }
+    }
+  }
+}
+```
+
+The resolver will try to find the following import at path `./packages/subfolder/src/utils/helper`.
+
+```jsx
+import * as helper from 'utils/helper';
+```

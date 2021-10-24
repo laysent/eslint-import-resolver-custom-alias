@@ -137,6 +137,39 @@ describe('resolver plugin', () => {
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(modifiedSource);
   });
+  it('should handle empty string as alias', () => {
+    const config = Object.assign({}, defaultConfig, {
+      alias: {
+        '': './src',
+      },
+    });
+    const fileInPackage = path.resolve(process.cwd(), defaultFile);
+    plugin.resolve('path/to/file', fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
+  it('should handle empty string as alias and packages configred', () => {
+    fs.statSync.and.returnValue({
+      isFile() { return false; }
+    });
+    fs.readdirSync.and.returnValue(['subfolder']);
+    const config = Object.assign({}, defaultConfig, {
+      alias: {
+        '': './src',
+      },
+      packages: [
+        'packages/*'
+      ],
+    });
+    const fileInPackage = path.resolve(process.cwd(), 'packages', 'subfolder', defaultFile);
+    plugin.resolve('path/to/file', fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), 'packages', 'subfolder', './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
   it('should not throw error if packages not found', () => {
     fs.statSync.and.throwError('no such file or dictionary');
     const config = Object.assign({}, defaultConfig, {
