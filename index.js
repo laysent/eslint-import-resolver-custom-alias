@@ -16,7 +16,7 @@ function getOptions(file, config) {
 
 function getPath(configPath, filepath, packages) {
   const workspaces =
-    packages.filter(pkg => filepath.indexOf(pkg) === 0 && filepath[pkg.length] === '/');
+    packages.filter(pkg => filepath.indexOf(pkg) === 0 && filepath[pkg.length] === path.sep);
   const relativeRoot = workspaces[0] || process.cwd();
   return path.resolve(relativeRoot, configPath);
 }
