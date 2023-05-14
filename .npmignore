@@ -1,0 +1,4 @@
+examples
+node_modules
+spec
+.travis.yml
