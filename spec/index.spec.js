@@ -30,20 +30,20 @@ describe('resolver plugin', () => {
   });
   it('should use config to resolve file', () => {
     plugin.resolve(defaultSource, defaultFile, defaultConfig);
-    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substr(1)}`;
+    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substring(1)}`;
 
     const mostRecent = resolve.sync.calls.mostRecent();
 
-    expect(mostRecent.args[0]).toBe(modifiedSource);
+    expect(mostRecent.args[0]).toBe(path.normalize(modifiedSource));
     expect(mostRecent.args[1].extensions).toEqual(['.js', '.jsx']);
     expect(mostRecent.args[1].basedir).toBe(defaultBasedir);
   });
   it('should replace alias', () => {
     plugin.resolve(defaultSource, defaultFile, defaultConfig);
-    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substr(1)}`;
+    const modifiedSource = `${path.resolve(process.cwd(), './src')}${defaultSource.substring(1)}`;
 
     const mostRecent = resolve.sync.calls.mostRecent();
-    expect(mostRecent.args[0]).toBe(modifiedSource);
+    expect(mostRecent.args[0]).toBe(path.normalize(modifiedSource));
   });
   it('should not replace alias when not starts with it', () => {
     const source = '@@/path/@/file/@';
@@ -181,6 +181,30 @@ describe('resolver plugin', () => {
     const fileInPackage = path.resolve(process.cwd(), defaultFile);
     plugin.resolve(defaultSource, fileInPackage, config);
     const modifiedSource = path.resolve(process.cwd(), './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
+  it('should strip query parameters when configured', () => {
+    const config = Object.assign({}, defaultConfig, {
+      stripQuery: true,
+    });
+    const sourceWithQuery = '@/path/to/file?foo=bar';
+    const fileInPackage = path.resolve(process.cwd(), defaultFile);
+    plugin.resolve(sourceWithQuery, fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), './src', 'path/to/file');
+
+    const mostRecent = resolve.sync.calls.mostRecent();
+    expect(mostRecent.args[0]).toBe(modifiedSource);
+  });
+  it('should leave query parameters intact when not configured', () => {
+    const config = Object.assign({}, defaultConfig, {
+      stripQuery: false,
+    });
+    const sourceWithQuery = '@/path/to/file?foo=bar';
+    const fileInPackage = path.resolve(process.cwd(), defaultFile);
+    plugin.resolve(sourceWithQuery, fileInPackage, config);
+    const modifiedSource = path.resolve(process.cwd(), './src', 'path/to/file?foo=bar');
 
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(modifiedSource);

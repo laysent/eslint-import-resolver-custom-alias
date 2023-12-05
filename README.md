@@ -27,6 +27,7 @@ yarn add --dev eslint-import-resolver-custom-alias
         "alias": {
           "src": "./src"
         },
+        "stripQuery": false,
         "extensions": [".js", ".jsx"],
         "packages": [
           "packages/*"
@@ -40,6 +41,8 @@ yarn add --dev eslint-import-resolver-custom-alias
 Here, `alias` is a key-value pair, where `key` represents the alias, and `value` represents
 it's actual path. Relative path is allowed for `value`. When used, it's relative to project
 root, where command line is running. (i.e. root path will be `process.cwd()`)
+
+`stripQuery` is a boolean value. If set to `true`, the resolver will strip query parameters from an imported string.
 
 `extensions` is an array of possible suffix. If not provided, default value will be `[".js"]`.
 

@@ -3,6 +3,19 @@ const fs = require('fs');
 const resolve = require('resolve'); // eslint-disable-line
 const globParent = require('glob-parent');
 
+/**
+ * Strip Query Params from Imports
+ */
+function stripQuery(id) {
+  const [bareId, query] = id.split('?');
+  const suffix = `${query ? `?${query}` : ''}`;
+  return {
+    bareId,
+    query,
+    suffix,
+  };
+}
+
 function getOptions(file, config) {
   return {
       extensions: config.extensions || ['.js'],
@@ -54,7 +67,8 @@ exports.resolve = (source, file, config) => {
       }
       return ret;
     }, source);
-    const resolvedPath = resolve.sync(modifiedSource, getOptions(file, config));
+    const resolvedSource = config.stripQuery ? stripQuery(modifiedSource).bareId : modifiedSource;
+    const resolvedPath = resolve.sync(resolvedSource, getOptions(file, config));
     return { found: true, path: resolvedPath };
   } catch (e) {
     return { found: false };
