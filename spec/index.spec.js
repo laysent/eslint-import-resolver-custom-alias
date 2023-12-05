@@ -150,9 +150,10 @@ describe('resolver plugin', () => {
     const mostRecent = resolve.sync.calls.mostRecent();
     expect(mostRecent.args[0]).toBe(modifiedSource);
   });
-  it('should handle empty string as alias and packages configred', () => {
+  it('should handle empty string as alias and packages configured', () => {
     fs.statSync.and.returnValue({
-      isFile() { return false; }
+      isFile() { return false; },
+      isDirectory() { return true; },
     });
     fs.readdirSync.and.returnValue(['subfolder']);
     const config = Object.assign({}, defaultConfig, {
