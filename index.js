@@ -67,7 +67,8 @@ exports.resolve = (source, file, config) => {
       }
       return ret;
     }, source);
-    const resolvedPath = resolve.sync(stripQuery(modifiedSource).bareId, getOptions(file, config));
+    const resolvedSource = config.stripQuery ? stripQuery(modifiedSource).bareId : modifiedSource;
+    const resolvedPath = resolve.sync(resolvedSource, getOptions(file, config));
     return { found: true, path: resolvedPath };
   } catch (e) {
     return { found: false };
